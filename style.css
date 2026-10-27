@@ -25,45 +25,81 @@ body::before {
 
 /* --- LIGHT MODE (Colourful) --- */
 body.light-mode {
-  background-color: #f0f4f8; /* Halka neela/safed */
+  background-color: #f0f4f8;
   color: #0f172a;
   background-image: 
     linear-gradient(rgba(99, 102, 241, 0.2) 1px, transparent 1px),
     linear-gradient(90deg, rgba(99, 102, 241, 0.2) 1px, transparent 1px),
-    linear-gradient(135deg, #e0e7ff 0%, #fce7f3 100%); /* Colourful Gradient */
+    linear-gradient(135deg, #e0e7ff 0%, #fce7f3 100%);
 }
 body.light-mode::before { opacity: 0; }
 
-/* --- MENU BUTTON (Hamburger) --- */
+/* --- CLEAN 3-LINES MENU BUTTON --- */
 .menu-btn {
-  position: fixed; top: 20px; left: 20px;
-  background: rgba(30, 41, 59, 0.8); color: white;
-  border: 2px solid #6366f1; padding: 10px 15px;
-  font-size: 1.5rem; border-radius: 10px; cursor: pointer;
-  z-index: 90; transition: 0.3s; backdrop-filter: blur(5px);
+  position: fixed; 
+  top: 20px; 
+  left: 20px;
+  width: 50px; 
+  height: 50px;
+  background: rgba(30, 41, 59, 0.8); 
+  border: 2px solid #6366f1; 
+  border-radius: 12px;
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center;
+  gap: 6px; 
+  cursor: pointer;
+  z-index: 90; 
+  transition: 0.3s; 
+  backdrop-filter: blur(5px);
+}
+.menu-btn span {
+  display: block; 
+  width: 25px; 
+  height: 3px;
+  background-color: white; 
+  border-radius: 3px;
+  transition: 0.3s;
 }
 .menu-btn:hover { background: #6366f1; transform: scale(1.05); }
-body.light-mode .menu-btn { background: rgba(255, 255, 255, 0.8); color: #0f172a; }
+body.light-mode .menu-btn { background: rgba(255, 255, 255, 0.8); }
+body.light-mode .menu-btn span { background-color: #0f172a; }
+body.light-mode .menu-btn:hover span { background-color: white; }
 
 /* --- SIDEBAR (Left Side Menu) --- */
 .sidebar {
-  position: fixed; top: 0; left: -300px; /* Shuru mein screen se bahar */
-  width: 280px; height: 100vh;
-  background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px);
+  position: fixed; 
+  top: 0; 
+  left: -300px; /* Shuru mein screen se bahar chupa hua */
+  width: 280px; 
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.95); 
+  backdrop-filter: blur(15px);
   border-right: 2px solid #6366f1;
-  z-index: 100; transition: 0.3s ease-in-out;
-  padding: 20px; display: flex; flex-direction: column;
+  z-index: 100; 
+  transition: left 0.3s ease-in-out;
+  padding: 20px; 
+  display: flex; 
+  flex-direction: column;
 }
 .sidebar.active { left: 0; /* Khulne par screen par aayega */ }
 body.light-mode .sidebar { background: rgba(255, 255, 255, 0.95); border-right: 2px solid #818cf8; color: #0f172a; }
 
 .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
 .sidebar-header h2 { font-size: 1.5rem; }
-.close-btn { background: none; border: none; color: inherit; font-size: 1.5rem; cursor: pointer; }
+.close-btn { background: none; border: none; color: inherit; font-size: 1.5rem; cursor: pointer; transition: 0.2s; }
+.close-btn:hover { color: #ef4444; }
 
 .side-link {
-  display: block; color: #94a3b8; text-decoration: none;
-  padding: 15px 10px; border-radius: 8px; font-size: 1.1rem; margin-bottom: 5px; transition: 0.2s;
+  display: block; 
+  color: #94a3b8; 
+  text-decoration: none;
+  padding: 15px 10px; 
+  border-radius: 8px; 
+  font-size: 1.1rem; 
+  margin-bottom: 5px; 
+  transition: 0.2s;
 }
 body.light-mode .side-link { color: #334155; }
 .side-link:hover { background: rgba(99, 102, 241, 0.2); color: #818cf8; padding-left: 20px; }
@@ -81,10 +117,8 @@ body.light-mode .side-link { color: #334155; }
   display: flex; justify-content: space-between; align-items: center;
   font-size: 1.2rem; font-weight: bold; padding: 10px 5px;
 }
-
 .theme-switch { position: relative; display: inline-block; width: 60px; height: 34px; }
 .theme-switch input { opacity: 0; width: 0; height: 0; }
-
 .slider {
   position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
   background-color: #94a3b8; transition: .4s; border-radius: 34px;
@@ -94,7 +128,7 @@ body.light-mode .side-link { color: #334155; }
   left: 4px; bottom: 4px; background-color: white;
   transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
-input:checked + .slider { background-color: #6366f1; } /* ON hone par Neela */
+input:checked + .slider { background-color: #6366f1; }
 input:checked + .slider:before { transform: translateX(26px); }
 
 /* --- HEADER --- */
@@ -125,5 +159,4 @@ body.light-mode .card h2 { color: #1e293b; }
 .card p { font-size: 0.9rem; color: #94a3b8; }
 body.light-mode .card p { color: #64748b; }
 
-/* Footer */
 footer { text-align: center; padding: 40px; color: #64748b; font-size: 0.9rem; margin-top: 40px; position: relative; z-index: 1; }
