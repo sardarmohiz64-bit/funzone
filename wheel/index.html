@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Name Wheel - FunZone</title>
+  <style>
+    body { 
+      font-family: system-ui, sans-serif; 
+      background: #0f172a; 
+      color: #e2e8f0; 
+      text-align: center; 
+      padding-top: 30px; 
+      min-height: 100vh; 
+      margin: 0; 
+      overflow-x: hidden;
+    }
+    a { 
+      color: #6366f1; 
+      text-decoration: none; 
+      font-size: 1.2rem; 
+      display: inline-block; 
+      margin-bottom: 20px; 
+    }
+    a:hover { text-decoration: underline; }
+
+    /* Pahiye ka container */
+    .wheel-container {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin: 30px auto;
+    }
+
+    /* Pahiye ke upar wala pointer (Teer) */
+    .pointer {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0; 
+      height: 0; 
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-top: 30px solid #ef4444; /* Lal rang ka teer */
+      z-index: 10;
+      filter: drop-shadow(0 4px 2px rgba(0,0,0,0.5));
+    }
+
+    /* Asli Pahiya */
+    .wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 8px solid #1e293b;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6), inset 0 0 20px rgba(0,0,0,0.5);
+      /* Colors background JS se set honge */
+      background: conic-gradient(#ef4444 0deg 90deg, #3b82f6 90deg 180deg, #10b981 180deg 270deg, #eab308 270deg 360deg);
+      transition: transform 4s cubic-bezier(0.2, 0.8, 0.3, 1); /* Smooth ghoomne ke liye */
+      transform: rotate(0deg);
+    }
+
+    /* Pahiye ke beech ka button */
+    .center-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      background: #1e293b;
+      border: 4px solid #0f172a;
+      border-radius: 50%;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      z-index: 5;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      transition: 0.2s;
+    }
+    .center-btn:hover { background: #334155; transform: translate(-50%, -50%) scale(1.1); }
+    .center-btn:disabled { opacity: 0.8; cursor: not-allowed; }
+
+    /* Result Text */
+    #result {
+      font-size: 1.5rem;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #fde047;
+      min-height: 35px;
+    }
+
+    /* Naam add karne ka box */
+    .controls {
+      margin-top: 20px;
+      background: #1e293b;
+      padding: 15px;
+      border-radius: 10px;
+      display: inline-block;
+      text-align: left;
+    }
+    .controls input {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #334155;
+      background: #0f172a;
+      color: white;
+      outline: none;
+      width: 200px;
+    }
+    .controls button {
+      padding: 10px 15px;
+      border: none;
+      background: #10b981;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .controls button:hover { background: #059669; }
+  </style>
+</head>
+<body>
+  <a href="../index.html">⬅️ Wapas Home</a>
+  
+  <h1>🎡 Name Wheel</h1>
+  <p>Bachon ke naam likhein aur pahiya ghumayein!</p>
+
+  <div class="wheel-container">
+    <div class="pointer"></div>
+    <div class="wheel" id="wheel"></div>
+    <button class="center-btn" id="spinBtn" onclick="spinWheel()">SPIN</button>
+  </div>
+
+  <div id="result"></div>
+
+  <div class="controls">
+    <input type="text" id="nameInput" placeholder="Naya naam likhein...">
+    <button onclick="addName()">+ Add</button>
+    <br><br>
+    <div id="nameList" style="font-size: 0.9rem; color: #94a3b8;"></div>
+  </div>
+
+  <script>
+    // Default naam
+    let names = ["Ali", "Sara", "Ahmed", "Zain", "Fatima", "Usman"];
+    
+    // Colors jo pahiye mein use honge
+    const colors = ["#ef4444", "#3b82f6", "#10b981", "#eab308", "#8b5cf6", "#ec4899", "#f97316", "#14b8a6"];
+    
+    let currentRotation = 0;
+    let isSpinning = false;
+
+    // Pahiye ko update karne ka function (naam aur colors ke hisaab se)
+    function drawWheel() {
+      const wheel = document.getElementById('wheel');
+      const nameListDiv = document.getElementById('nameList');
+      const total = names.length;
+      const anglePerSlice = 360 / total;
+      
+      let gradientParts = [];
+      
+      // Har naam ke liye ek color slice banayein
+      for (let i = 0; i < total; i++) {
+        const startAngle = i * anglePerSlice;
+        const endAngle = (i + 1) * anglePerSlice;
+        const color = colors[i % colors.length]; // Colors repeat honge agar zyada naam hon
+        gradientParts.push(`${color} ${startAngle}deg ${endAngle}deg`);
+      }
+      
+      // Background set karein
+      wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
+      
+      // Neeche list mein naam dikhayein
+      nameListDiv.innerHTML = names.join(" • ");
+    }
+
+    // Pahiya ghumane ka function
+    function spinWheel() {
+      if (isSpinning) return;
+      isSpinning = true;
+
+      const wheel = document.getElementById('wheel');
+      const spinBtn = document.getElementById('spinBtn');
+      const resultDiv = document.getElementById('result');
+      
+      spinBtn.disabled = true;
+      resultDiv.innerHTML = "Ghoom raha hai...";
+
+      // Kam az kam 5 chakkar (1800 deg) aur ek random angle
+      const extraSpins = 1800 + Math.floor(Math.random() * 360);
+      
+      // Naya rotation set karein
+      currentRotation += extraSpins;
+      wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+      // 4 second baad (jab animation ruk jaye) result calculate karein
+      setTimeout(() => {
+        isSpinning = false;
+        spinBtn.disabled = false;
+
+        // Kaunsa hissa (slice) jeeta? (Math to find the winning slice)
+        const actualRotation = currentRotation % 360;
+        // Pointer 0 degree (top) par hai. Wheel ko ulta calculate karte hain.
+        const winningAngle = (360 - actualRotation) % 360;
+        
+        const total = names.length;
+        const anglePerSlice = 360 / total;
+        
+        // Jeetne wale naam ka index dhoondein
+        const winningIndex = Math.floor(winningAngle / anglePerSlice);
+        
+        // Agar list khatam ho jaye to wapas 0 se shuru
+        const winner = names[winningIndex >= total ? 0 : winningIndex];
+
+        resultDiv.innerHTML = `🎉 Winner: ${winner}! 🎉`;
+      }, 4000); // 4000ms = 4 seconds (CSS transition ke barabar)
+    }
+
+    // Naya naam add karne ka function
+    function addName() {
+      const input = document.getElementById('nameInput');
+      const name = input.value.trim();
+      
+      if (name !== "" && names.length < 15) { // Max 15 naam taake pahiya kharab na lage
+        names.push(name);
+        input.value = ""; // Input box clear karein
+        drawWheel(); // Pahiya dobara draw karein
+      }
+    }
+
+    // Enter dabane par bhi naam add ho
+    document.getElementById('nameInput').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') addName();
+    });
+
+    // Jab page load ho to pahiya draw karein
+    window.onload = drawWheel;
+  </script>
+</body>
+</html>
