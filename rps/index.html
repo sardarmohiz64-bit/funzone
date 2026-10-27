@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rock Paper Scissors - FunZone</title>
+  <style>
+    body { 
+      font-family: 'Segoe UI', system-ui, sans-serif; color: #f3f4f6; text-align: center; padding-top: 30px; 
+      min-height: 100vh; margin: 0; overflow-x: hidden; background-color: #0b0f19;
+      background-image: linear-gradient(rgba(139, 92, 246, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
+      background-size: 50px 50px; background-attachment: fixed;
+    }
+    a.back-btn { 
+      position: absolute; top: 20px; left: 20px; color: #8b5cf6; text-decoration: none; 
+      font-size: 1rem; font-weight: bold; background: rgba(139, 92, 246, 0.1); padding: 8px 15px; border-radius: 8px; transition: 0.2s;
+    }
+    a.back-btn:hover { background: rgba(139, 92, 246, 0.3); }
+    
+    h1 { font-size: 2.5rem; margin-top: 40px; margin-bottom: 10px; color: #8b5cf6; }
+    
+    .score-board { display: flex; justify-content: center; gap: 50px; font-size: 1.5rem; font-weight: bold; margin: 20px 0; color: #fbbf24; }
+    
+    .hands { display: flex; justify-content: center; align-items: center; gap: 40px; font-size: 4rem; margin: 30px 0; }
+    .hands div { background: #1f2937; padding: 20px; border-radius: 20px; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; border: 2px solid #374151; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+    
+    .result-area { font-size: 1.5rem; font-weight: bold; min-height: 60px; margin-top: 10px; }
+    
+    .choices { display: flex; justify-content: center; gap: 20px; margin: 30px 0; }
+    .choice-btn { 
+      font-size: 3rem; background: #1f2937; border: 2px solid #374151; border-radius: 20px; 
+      padding: 15px 25px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .choice-btn:hover { transform: scale(1.1); border-color: #8b5cf6; background: rgba(139, 92, 246, 0.2); }
+    
+    button.reset-btn { 
+      background: #ef4444; color: white; border: none; padding: 12px 25px; border-radius: 10px; 
+      cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.2s; margin-top: 20px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+    }
+    button.reset-btn:hover { background: #dc2626; transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+  <a href="../index.html" class="back-btn">⬅️ Back to Home</a>
+  
+  <h1>✊ Rock Paper Scissors</h1>
+  <p>Aapka move kya hoga?</p>
+  
+  <div class="score-board">
+    <div>Player: <span id="playerScore">0</span></div>
+    <div>Computer: <span id="computerScore">0</span></div>
+  </div>
+
+  <div class="hands">
+    <div id="playerHand">❔</div>
+    <div style="font-size: 1.5rem; color: #9ca3af;">VS</div>
+    <div id="computerHand">❔</div>
+  </div>
+
+  <div class="result-area">
+    <div id="resultMsg" style="color: #9ca3af;">Apna move choose karein!</div>
+  </div>
+
+  <div class="choices">
+    <button class="choice-btn" onclick="play('rock')">✊</button>
+    <button class="choice-btn" onclick="play('paper')">✋</button>
+    <button class="choice-btn" onclick="play('scissors')">✌️</button>
+  </div>
+  
+  <button class="reset-btn" onclick="resetGame()">Reset Score</button>
+
+  <script>
+    let pScore = 0;
+    let cScore = 0;
+    const emojis = { rock: '✊', paper: '✋', scissors: '✌️' };
+
+    function play(playerChoice) {
+      const choices = ['rock', 'paper', 'scissors'];
+      const computerChoice = choices[Math.floor(Math.random() * 3)];
+      
+      document.getElementById('playerHand').innerText = emojis[playerChoice];
+      document.getElementById('computerHand').innerText = emojis[computerChoice];
+      
+      const resultMsg = document.getElementById('resultMsg');
+
+      if (playerChoice === computerChoice) {
+        resultMsg.innerText = "Barabar ho gaya! (Tie)";
+        resultMsg.style.color = "#9ca3af";
+      } else if (
+        (playerChoice === 'rock' && computerChoice === 'scissors') ||
+        (playerChoice === 'paper' && computerChoice === 'rock') ||
+        (playerChoice === 'scissors' && computerChoice === 'paper')
+      ) {
+        resultMsg.innerText = "Aap Jeet Gaye! 🎉";
+        resultMsg.style.color = "#10b981";
+        pScore++;
+      } else {
+        resultMsg.innerText = "Computer Jeet Gaya! 😢";
+        resultMsg.style.color = "#ef4444";
+        cScore++;
+      }
+
+      document.getElementById('playerScore').innerText = pScore;
+      document.getElementById('computerScore').innerText = cScore;
+    }
+
+    function resetGame() {
+      pScore = 0;
+      cScore = 0;
+      document.getElementById('playerScore').innerText = pScore;
+      document.getElementById('computerScore').innerText = cScore;
+      document.getElementById('playerHand').innerText = "❔";
+      document.getElementById('computerHand').innerText = "❔";
+      document.getElementById('resultMsg').innerText = "Apna move choose karein!";
+      document.getElementById('resultMsg').style.color = "#9ca3af";
+    }
+  </script>
+</body>
+</html>
