@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Password Maker - FunZone</title>
+  <style>
+    body { 
+      font-family: 'Segoe UI', system-ui, sans-serif; color: #f3f4f6; text-align: center; padding-top: 30px; 
+      min-height: 100vh; margin: 0; overflow-x: hidden; background-color: #0b0f19;
+      background-image: linear-gradient(rgba(139, 92, 246, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
+      background-size: 50px 50px; background-attachment: fixed;
+    }
+    a.back-btn { 
+      position: absolute; top: 20px; left: 20px; color: #8b5cf6; text-decoration: none; 
+      font-size: 1rem; font-weight: bold; background: rgba(139, 92, 246, 0.1); padding: 8px 15px; border-radius: 8px; transition: 0.2s;
+    }
+    a.back-btn:hover { background: rgba(139, 92, 246, 0.3); }
+    
+    h1 { font-size: 2.5rem; margin-top: 40px; margin-bottom: 10px; color: #8b5cf6; }
+    
+    .container {
+      background: #1f2937; border: 1px solid #374151; padding: 30px; border-radius: 20px;
+      display: inline-block; width: 90%; max-width: 450px; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .result-box { display: flex; background: #111827; border-radius: 10px; margin-bottom: 25px; border: 1px solid #374151; }
+    .result-box input { flex: 1; background: transparent; border: none; padding: 15px; color: #fbbf24; font-size: 1.2rem; font-weight: bold; outline: none; }
+    .copy-btn { background: #8b5cf6; border: none; color: white; padding: 0 20px; font-weight: bold; cursor: pointer; border-radius: 0 10px 10px 0; transition: 0.2s; }
+    .copy-btn:hover { background: #7c3aed; }
+
+    .options { text-align: left; margin-bottom: 25px; }
+    .option-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 1.1rem; }
+    
+    input[type="range"] { width: 100%; margin: 10px 0 20px; cursor: pointer; accent-color: #8b5cf6; }
+    input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: #8b5cf6; }
+
+    .generate-btn {
+      width: 100%; background: #10b981; color: white; border: none; padding: 15px; font-size: 1.2rem; font-weight: bold; border-radius: 10px; cursor: pointer; transition: 0.2s;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    }
+    .generate-btn:hover { background: #059669; transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+  <a href="../index.html" class="back-btn">⬅️ Back to Home</a>
+  
+  <h1>🔐 Password Maker</h1>
+  <p>Apna strong password banayein!</p>
+
+  <div class="container">
+    <div class="result-box">
+      <input type="text" id="passwordOutput" readonly value="Password yahan aayega">
+      <button class="copy-btn" onclick="copyPassword()">Copy</button>
+    </div>
+
+    <div class="options">
+      <div class="option-row">
+        <label>Password ki lambai:</label>
+        <span id="lengthVal" style="color: #8b5cf6; font-weight: bold;">12</span>
+      </div>
+      <input type="range" id="length" min="6" max="30" value="12" oninput="document.getElementById('lengthVal').innerText = this.value">
+      
+      <div class="option-row">
+        <label>Capital Letters (A-Z)</label>
+        <input type="checkbox" id="uppercase" checked>
+      </div>
+      <div class="option-row">
+        <label>Small Letters (a-z)</label>
+        <input type="checkbox" id="lowercase" checked>
+      </div>
+      <div class="option-row">
+        <label>Numbers (0-9)</label>
+        <input type="checkbox" id="numbers" checked>
+      </div>
+      <div class="option-row">
+        <label>Symbols (@ # $ %)</label>
+        <input type="checkbox" id="symbols" checked>
+      </div>
+    </div>
+
+    <button class="generate-btn" onclick="generatePassword()">Generate Password</button>
+  </div>
+
+  <script>
+    function generatePassword() {
+      const length = document.getElementById('length').value;
+      const hasUpper = document.getElementById('uppercase').checked;
+      const hasLower = document.getElementById('lowercase').checked;
+      const hasNumber = document.getElementById('numbers').checked;
+      const hasSymbol = document.getElementById('symbols').checked;
+
+      const upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      const lowerChars = "abcdefghijklmnopqrstuvwxyz";
+      const numberChars = "0123456789";
+      const symbolChars = "!@#$%^&*()_+~`|}{[]:;?><,./-=";
+
+      let allChars = "";
+      if (hasUpper) allChars += upperChars;
+      if (hasLower) allChars += lowerChars;
+      if (hasNumber) allChars += numberChars;
+      if (hasSymbol) allChars += symbolChars;
+
+      if (allChars === "") {
+        alert("Kam az kam ek option select karein!");
+        return;
+      }
+
+      let password = "";
+      for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * allChars.length);
+        password += allChars[randomIndex];
+      }
+
+      document.getElementById('passwordOutput').value = password;
+    }
+
+    function copyPassword() {
+      const output = document.getElementById('passwordOutput');
+      if(output.value === "Password yahan aayega") return;
+      
+      output.select();
+      document.execCommand("copy");
+      
+      const copyBtn = document.querySelector('.copy-btn');
+      copyBtn.innerText = "Copied!";
+      setTimeout(() => { copyBtn.innerText = "Copied!"; }, 2000);
+    }
+  </script>
+</body>
+</html>
