@@ -14,7 +14,17 @@
     <div class="sidebar-logo">
       🎮 FunZone
     </div>
-    
+        <!-- Dark Mode sab se upar -->
+    <div class="theme-toggle-container" style="padding: 15px 20px; border-bottom: 1px solid var(--border-color);">
+      <span style="display: flex; align-items: center; gap: 12px; color: var(--text-muted); font-weight: 500;">
+        <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        Dark Mode
+      </span>
+      <label class="theme-switch">
+        <input type="checkbox" id="themeCheckbox" onchange="toggleTheme()" checked>
+        <span class="slider round"></span>
+      </label>
+    </div>
     <div class="sidebar-menu">
       <!-- MAIN SECTION -->
       <p class="menu-title">MAIN</p>
@@ -53,13 +63,7 @@
         Password Maker
       </a>
 
-                     <div class="sidebar-logo">
-      🎮 FunZone
-    </div>
-    
-    <div class="sidebar-menu">
-
-      <!-- MAIN SECTION -->
+                 
 
     </div>
   </aside>
