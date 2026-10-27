@@ -54,13 +54,13 @@
       border-radius: 50%;
       border: 8px solid #1e293b;
       box-shadow: 0 10px 25px rgba(0,0,0,0.6), inset 0 0 20px rgba(0,0,0,0.5);
+      background: #334155; /* Default khali pahiye ka rang */
       transition: transform 4s cubic-bezier(0.2, 0.8, 0.3, 1);
       transform: rotate(0deg);
       position: relative;
       overflow: hidden;
     }
 
-    /* Naam (Text) ka container */
     #labels-container {
       position: absolute;
       top: 0;
@@ -70,7 +70,6 @@
       pointer-events: none;
     }
 
-    /* Har naam ke liye wrapper jo center se ghomega */
     .label-wrapper {
       position: absolute;
       top: 0; 
@@ -80,10 +79,9 @@
       transform-origin: 50% 50%; 
     }
 
-    /* Naam ka text */
     .label-text {
       position: absolute;
-      top: 20px; /* Edge se thora sa andar */
+      top: 20px; 
       left: 50%;
       transform: translateX(-50%);
       width: 90px;
@@ -91,7 +89,7 @@
       font-weight: bold;
       color: #ffffff;
       font-size: 16px;
-      text-shadow: 1px 1px 4px rgba(0,0,0,0.9); /* Text ko wazeh karne ke liye */
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.9); 
       word-wrap: break-word;
     }
 
@@ -154,10 +152,18 @@
       font-weight: bold;
     }
     .controls button:hover { background: #059669; }
+    
+    .btn-clear {
+      background: #ef4444 !important;
+      margin-left: 10px;
+    }
+    .btn-clear:hover { background: #dc2626 !important; }
+
     #nameList {
       font-size: 0.9rem; 
       color: #94a3b8; 
-      margin-top: 10px;
+      margin-top: 15px;
+      max-width: 300px;
     }
   </style>
 </head>
@@ -165,7 +171,7 @@
   <a href="../index.html">⬅️ Wapas Home</a>
   
   <h1>🎡 Name Wheel</h1>
-  <p>Bachon ke naam likhein aur pahiya ghumayein!</p>
+  <p>Apni marzi se naam add karein aur pahiya ghumayein!</p>
 
   <div class="wheel-container">
     <div class="pointer"></div>
@@ -180,12 +186,14 @@
   <div class="controls">
     <input type="text" id="nameInput" placeholder="Naya naam likhein...">
     <button onclick="addName()">+ Add</button>
-    <div id="nameList"></div>
+    <button class="btn-clear" onclick="clearNames()">Clear All</button>
+    <div id="nameList">Koi naam nahi hai. Naam add karein.</div>
   </div>
 
   <script>
-    let names = ["Ali", "Sara", "Ahmed", "Zain", "Fatima", "Usman"];
-    const colors = ["#ef4444", "#3b82f6", "#10b981", "#eab308", "#8b5cf6", "#ec4899", "#f97316", "#14b8a6"];
+    // Shuru mein koi naam nahi hai
+    let names = [];
+    const colors = ["#ef4444", "#3b82f6", "#10b981", "#eab308", "#8b5cf6", "#ec4899", "#f97316", "#14b8a6", "#06b6d4", "#84cc16"];
     
     let currentRotation = 0;
     let isSpinning = false;
@@ -195,10 +203,18 @@
       const labelsContainer = document.getElementById('labels-container');
       const nameListDiv = document.getElementById('nameList');
       const total = names.length;
-      const anglePerSlice = 360 / total;
       
+      labelsContainer.innerHTML = ''; // Container saaf karein
+
+      // Agar koi naam nahi hai to pahiya grey rahega
+      if (total === 0) {
+        wheel.style.background = '#334155';
+        nameListDiv.innerHTML = "Koi naam nahi hai. Neeche se naam add karein.";
+        return;
+      }
+
+      const anglePerSlice = 360 / total;
       let gradientParts = [];
-      labelsContainer.innerHTML = ''; // Purane text saaf karein
       
       for (let i = 0; i < total; i++) {
         const startAngle = i * anglePerSlice;
@@ -206,11 +222,9 @@
         const color = colors[i % colors.length];
         gradientParts.push(`${color} ${startAngle}deg ${endAngle}deg`);
         
-        // --- TEXT SET KARNE KA NAYA LOGIC ---
         const wrapper = document.createElement('div');
         wrapper.className = 'label-wrapper';
         
-        // Hisse ke beech ka angle nikalna
         const midAngle = startAngle + (anglePerSlice / 2);
         wrapper.style.transform = `rotate(${midAngle}deg)`;
         
@@ -218,7 +232,6 @@
         span.className = 'label-text';
         span.innerText = names[i];
         
-        // Agar text ulta (upside down) ho raha ho to usay seedha karein
         if (midAngle > 90 && midAngle < 270) {
           span.style.transform = 'translateX(-50%) rotate(180deg)';
         }
@@ -228,10 +241,20 @@
       }
       
       wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
-      nameListDiv.innerHTML = "Total Naam: " + names.join(" • ");
+      
+      // Neeche list mein naam show karein (commas ke sath)
+      nameListDiv.innerHTML = "Total Naam (" + total + "): " + names.join(" • ");
     }
 
     function spinWheel() {
+      const total = names.length;
+      
+      // Agar 2 se kam naam hain to spin nahi hone dega
+      if (total < 2) {
+        alert("Pahiya ghumanay ke liye kam az kam 2 naam add karein!");
+        return;
+      }
+
       if (isSpinning) return;
       isSpinning = true;
 
@@ -253,9 +276,7 @@
         const actualRotation = currentRotation % 360;
         const winningAngle = (360 - actualRotation) % 360;
         
-        const total = names.length;
         const anglePerSlice = 360 / total;
-        
         const winningIndex = Math.floor(winningAngle / anglePerSlice);
         const winner = names[winningIndex >= total ? 0 : winningIndex];
 
@@ -267,12 +288,21 @@
       const input = document.getElementById('nameInput');
       const name = input.value.trim();
       
-      if (name !== "" && names.length < 12) { 
+      // Max 10 naam taake text ek dusre par na chade
+      if (name !== "" && names.length < 10) { 
         names.push(name);
         input.value = ""; 
         drawWheel(); 
-      } else if (names.length >= 12) {
-        alert("Zyada se zyada 12 naam add kiye ja sakte hain taake pahiya saaf nazar aaye.");
+      } else if (names.length >= 10) {
+        alert("Zyada se zyada 10 naam add kiye ja sakte hain taake pahiya saaf nazar aaye.");
+      }
+    }
+
+    function clearNames() {
+      if(confirm("Kya aap waqai saare naam delete karna chahte hain?")) {
+        names = [];
+        drawWheel();
+        document.getElementById('result').innerHTML = "";
       }
     }
 
