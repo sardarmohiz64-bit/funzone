@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Coin Flip - FunZone</title>
+  <style>
+    body { 
+      font-family: system-ui, sans-serif; 
+      background: #0f172a; 
+      color: #e2e8f0; 
+      text-align: center; 
+      padding-top: 50px; 
+      min-height: 100vh; 
+      margin: 0; 
+      overflow-x: hidden;
+    }
+    a { 
+      color: #6366f1; 
+      text-decoration: none; 
+      font-size: 1.2rem; 
+      display: inline-block; 
+      margin-bottom: 30px; 
+    }
+    a:hover { text-decoration: underline; }
+
+    /* 3D Coin Container (Scene) */
+    .scene {
+      width: 160px;
+      height: 160px;
+      perspective: 1000px; /* 3D depth ke liye */
+      margin: 50px auto;
+    }
+
+    /* Asli Coin */
+    .coin {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 2.5s cubic-bezier(0.25, 0.1, 0.15, 1); /* Smooth flip */
+      transform: rotateY(0deg);
+    }
+
+    /* Coin ke dono rukh (Heads/Tails) */
+    .side {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      backface-visibility: hidden; /* Peeche wala rukh chupata hai */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #854d0e; /* Dark gold text */
+      /* Sone (Gold) jaisa look dene ke liye gradient */
+      background: radial-gradient(circle at 30% 30%, #fef08a, #eab308, #a16207);
+      /* Coin ki motai aur shadow */
+      box-shadow: 
+        inset 0 0 0 6px #ca8a04,
+        inset 0 0 20px rgba(0,0,0,0.5),
+        0 10px 20px rgba(0,0,0,0.5);
+      text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+    }
+
+    /* Tails (Peeche wala rukh) ko 180 degree ghumaya gaya hai */
+    .tails {
+      transform: rotateY(180deg);
+    }
+
+    /* Result Text */
+    #result-text {
+      font-size: 1.5rem;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #fde047;
+      min-height: 30px;
+    }
+
+    button { 
+      background: #6366f1; 
+      color: white; 
+      border: none; 
+      padding: 15px 40px; 
+      font-size: 1.2rem; 
+      border-radius: 10px; 
+      cursor: pointer; 
+      margin-top: 30px; 
+      transition: 0.2s; 
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+    button:hover { background: #4f46e5; transform: translateY(-2px); }
+    button:disabled { background: #475569; cursor: not-allowed; opacity: 0.7; transform: none; }
+  </style>
+</head>
+<body>
+  <a href="../index.html">⬅️ Wapas Home</a>
+  
+  <h1>🪙 Coin Flip</h1>
+  <p>Button dabayein aur sikka uchhalen!</p>
+
+  <div class="scene">
+    <div class="coin" id="coin">
+      <div class="side heads">Heads</div>
+      <div class="side tails">Tails</div>
+    </div>
+  </div>
+
+  <div id="result-text"></div>
+  
+  <button id="flipBtn" onclick="flipCoin()">Uchhalo (Flip)</button>
+
+  <script>
+    let isFlipping = false;
+    let currentRotation = 0;
+
+    function flipCoin() {
+      if (isFlipping) return;
+      isFlipping = true;
+
+      const coin = document.getElementById('coin');
+      const flipBtn = document.getElementById('flipBtn');
+      const resultText = document.getElementById('result-text');
+
+      flipBtn.disabled = true;
+      resultText.innerHTML = "Uchhal raha hai...";
+
+      // Random tay karein ke Heads (0) aayega ya Tails (180)
+      const isHeads = Math.random() < 0.5;
+      const targetRotation = isHeads ? 0 : 180;
+
+      // Kam az kam 5 chakkar (5 * 360 = 1800) lagayenge taake asli flip lage
+      const spins = 5 * 360; 
+      
+      // Naya rotation calculate karein
+      // currentRotation ko 360 ke multiple mein le kar aayenge taake flip smooth ho
+      const baseRotation = Math.floor(currentRotation / 360) * 360;
+      
+      // Final rotation mein total spins aur target (0 ya 180) shamil karein
+      const newRotation = baseRotation + spins + targetRotation;
+      
+      // CSS transition trigger karein
+      coin.style.transform = `rotateY(${newRotation}deg)`;
+      currentRotation = newRotation;
+
+      // 2.5 second baad (jab animation khatam ho) result show karein
+      setTimeout(() => {
+        isFlipping = false;
+        flipBtn.disabled = false;
+        
+        if (isHeads) {
+          resultText.innerHTML = "🎉 Result: HEADS!";
+        } else {
+          resultText.innerHTML = "🎉 Result: TAILS!";
+        }
+      }, 2500); // 2500ms = 2.5s (CSS transition time ke barabar)
+    }
+  </script>
+</body>
+</html>
