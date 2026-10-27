@@ -9,8 +9,38 @@
 </head>
 <body>
 
-  <!-- Naya Mota Aur Proper Button -->
-  <button id="themeToggle" class="theme-toggle" onclick="changeTheme()">☀️ Light Mode On Karein</button>
+  <!-- Left Side Menu Button -->
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+  <!-- Overlay (Peeche ka kala parda) -->
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <!-- Left Side Menu (Sidebar) -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>⚙️ Settings</h2>
+      <button class="close-btn" onclick="toggleMenu()">✖</button>
+    </div>
+    
+    <div class="sidebar-content">
+      <!-- Theme Toggle Switch -->
+      <div class="theme-switch-wrapper">
+        <span>🌙 Dark Mode</span>
+        <label class="theme-switch" for="checkbox">
+          <input type="checkbox" id="checkbox" onchange="toggleTheme()" checked />
+          <div class="slider round"></div>
+        </label>
+      </div>
+      
+      <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
+      
+      <!-- Quick Links -->
+      <a href="index.html" class="side-link">🏠 Home</a>
+      <a href="dice/index.html" class="side-link">🎲 Dice Roller</a>
+      <a href="coin/index.html" class="side-link">🪙 Coin Flip</a>
+      <a href="wheel/index.html" class="side-link">🎡 Name Wheel</a>
+    </div>
+  </div>
 
   <header>
     <h1>🎉 FunZone</h1>
@@ -30,37 +60,34 @@
     <p>Made with ❤️ by <b>Sardar Mohiz</b> | FunZone</p>
   </footer>
 
-  <button id="topBtn" class="top-btn" onclick="scrollToTop()">⬆️</button>
-
   <script>
-    // Theme Change karne ka naya aur asaan tareeqa
-    function changeTheme() {
-      // Body par light-mode class lagayein ya hatayein
-      document.body.classList.toggle('light-mode');
+    // Menu Open / Close Karne Ka Logic
+    function toggleMenu() {
+      document.getElementById('sidebar').classList.toggle('active');
+      document.getElementById('overlay').classList.toggle('active');
+    }
+
+    // Theme Toggle Switch Ka Logic
+    function toggleTheme() {
+      const isDarkMode = document.getElementById('checkbox').checked;
       
-      const btn = document.getElementById('themeToggle');
-      
-      // Agar light mode on hai to button ka text change karein
-      if(document.body.classList.contains('light-mode')) {
-        btn.innerHTML = "🌙 Dark Mode On Karein";
+      if (isDarkMode) {
+        document.body.classList.remove('light-mode');
+        localStorage.setItem('theme', 'dark');
       } else {
-        btn.innerHTML = "☀️ Light Mode On Karein";
+        document.body.classList.add('light-mode');
+        localStorage.setItem('theme', 'light');
       }
     }
 
-    // Back to Top Button ka logic
-    window.onscroll = function() {
-      const topBtn = document.getElementById('topBtn');
-      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-        topBtn.style.display = "block";
-      } else {
-        topBtn.style.display = "none";
+    // Jab page load ho to purani theme yaad rakhein
+    window.onload = function() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        document.getElementById('checkbox').checked = false; // Switch OFF karein
       }
     };
-
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
   </script>
 </body>
 </html>
