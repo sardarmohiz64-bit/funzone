@@ -32,7 +32,7 @@
       margin: 30px auto;
     }
 
-    /* Pahiye ke upar wala pointer (Teer) */
+    /* Teer (Pointer) */
     .pointer {
       position: absolute;
       top: -15px;
@@ -54,41 +54,45 @@
       border-radius: 50%;
       border: 8px solid #1e293b;
       box-shadow: 0 10px 25px rgba(0,0,0,0.6), inset 0 0 20px rgba(0,0,0,0.5);
-      background: conic-gradient(#ef4444 0deg 90deg, #3b82f6 90deg 180deg, #10b981 180deg 270deg, #eab308 270deg 360deg);
       transition: transform 4s cubic-bezier(0.2, 0.8, 0.3, 1);
       transform: rotate(0deg);
       position: relative;
-      overflow: hidden; /* Text ko andar rakhne ke liye */
+      overflow: hidden;
     }
 
-    /* Naam (Text) ko pahiye par set karna */
-    .wheel-labels {
+    /* Naam (Text) ka container */
+    #labels-container {
       position: absolute;
-      width: 100%;
-      height: 100%;
       top: 0;
       left: 0;
-      pointer-events: none; /* Taake SPIN button kaam karta rahe */
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
     }
 
+    /* Har naam ke liye wrapper jo center se ghomega */
     .label-wrapper {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%;
+      transform-origin: 50% 50%; 
     }
 
+    /* Naam ka text */
     .label-text {
       position: absolute;
-      left: -50px;
-      width: 100px;
-      top: -115px; /* Text ko bahar (edge) ki taraf push karta hai */
+      top: 20px; /* Edge se thora sa andar */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
       text-align: center;
       font-weight: bold;
       color: #ffffff;
-      font-size: 15px;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.8); /* Text ko wazeh parhne ke liye */
+      font-size: 16px;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.9); /* Text ko wazeh karne ke liye */
+      word-wrap: break-word;
     }
 
     /* Pahiye ke beech ka button */
@@ -122,7 +126,7 @@
       min-height: 35px;
     }
 
-    /* Naam add karne ka box */
+    /* Controls */
     .controls {
       margin-top: 20px;
       background: #1e293b;
@@ -166,8 +170,7 @@
   <div class="wheel-container">
     <div class="pointer"></div>
     <div class="wheel" id="wheel">
-      <!-- Yahan naam aayenge -->
-      <div class="wheel-labels" id="wheel-labels"></div>
+      <div id="labels-container"></div>
     </div>
     <button class="center-btn" id="spinBtn" onclick="spinWheel()">SPIN</button>
   </div>
@@ -189,7 +192,7 @@
 
     function drawWheel() {
       const wheel = document.getElementById('wheel');
-      const labelsContainer = document.getElementById('wheel-labels');
+      const labelsContainer = document.getElementById('labels-container');
       const nameListDiv = document.getElementById('nameList');
       const total = names.length;
       const anglePerSlice = 360 / total;
@@ -203,19 +206,21 @@
         const color = colors[i % colors.length];
         gradientParts.push(`${color} ${startAngle}deg ${endAngle}deg`);
         
-        // --- TEXT KO PAHIYE PAR SET KARNE KA LOGIC ---
+        // --- TEXT SET KARNE KA NAYA LOGIC ---
         const wrapper = document.createElement('div');
         wrapper.className = 'label-wrapper';
-        // Hisse ke beech (center) mein rotate karein
-        wrapper.style.transform = `rotate(${startAngle + (anglePerSlice / 2)}deg)`;
+        
+        // Hisse ke beech ka angle nikalna
+        const midAngle = startAngle + (anglePerSlice / 2);
+        wrapper.style.transform = `rotate(${midAngle}deg)`;
         
         const span = document.createElement('span');
         span.className = 'label-text';
         span.innerText = names[i];
         
         // Agar text ulta (upside down) ho raha ho to usay seedha karein
-        if (startAngle + (anglePerSlice / 2) > 90 && startAngle + (anglePerSlice / 2) < 270) {
-          span.style.transform = 'rotate(180deg)';
+        if (midAngle > 90 && midAngle < 270) {
+          span.style.transform = 'translateX(-50%) rotate(180deg)';
         }
         
         wrapper.appendChild(span);
@@ -262,7 +267,6 @@
       const input = document.getElementById('nameInput');
       const name = input.value.trim();
       
-      // Max 12 naam taake text ek dusre par na chade
       if (name !== "" && names.length < 12) { 
         names.push(name);
         input.value = ""; 
