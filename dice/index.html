@@ -8,9 +8,45 @@
     body { font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; text-align: center; padding-top: 50px; min-height: 100vh; margin: 0; }
     a { color: #6366f1; text-decoration: none; font-size: 1.2rem; display: inline-block; margin-bottom: 30px; }
     a:hover { text-decoration: underline; }
-    .dice-box { font-size: 100px; margin: 30px; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; background: #1e293b; border-radius: 20px; margin: 0 auto; border: 2px solid #334155; }
-    button { background: #6366f1; color: white; border: none; padding: 15px 40px; font-size: 1.2rem; border-radius: 10px; cursor: pointer; margin-top: 40px; transition: 0.2s; }
+    
+    .dice-box { 
+      font-size: 100px; 
+      margin: 30px auto; 
+      width: 150px; 
+      height: 150px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      background: #1e293b; 
+      border-radius: 20px; 
+      border: 2px solid #334155; 
+    }
+
+    /* Ye hai animation ka code */
+    @keyframes ghoom {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.2); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    /* Jab button dabega to ye class add hogi */
+    .rolling {
+      animation: ghoom 1s ease-in-out;
+    }
+
+    button { 
+      background: #6366f1; 
+      color: white; 
+      border: none; 
+      padding: 15px 40px; 
+      font-size: 1.2rem; 
+      border-radius: 10px; 
+      cursor: pointer; 
+      margin-top: 40px; 
+      transition: 0.2s; 
+    }
     button:hover { background: #4f46e5; transform: scale(1.05); }
+    button:disabled { background: #475569; cursor: not-allowed; opacity: 0.7; transform: none; }
   </style>
 </head>
 <body>
@@ -21,21 +57,38 @@
 
   <div class="dice-box" id="dice">⚀</div>
   
-  <button onclick="rollDice()">Roll Dice</button>
+  <button id="rollBtn" onclick="rollDice()">Roll Dice</button>
 
   <script>
     function rollDice() {
-      // 1 se 6 tak random number generate karna
-      const randomNumber = Math.floor(Math.random() * 6) + 1;
       const diceDiv = document.getElementById('dice');
-      
-      // Number ke hisaab se dice ka emoji change karna
-      if (randomNumber === 1) diceDiv.innerHTML = '⚀';
-      if (randomNumber === 2) diceDiv.innerHTML = '⚁';
-      if (randomNumber === 3) diceDiv.innerHTML = '⚂';
-      if (randomNumber === 4) diceDiv.innerHTML = '⚃';
-      if (randomNumber === 5) diceDiv.innerHTML = '⚄';
-      if (randomNumber === 6) diceDiv.innerHTML = '⚅';
+      const rollBtn = document.getElementById('rollBtn');
+      const faces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+
+      // Button ko disable karein taake koi bar bar click na kare
+      rollBtn.disabled = true;
+
+      // Animation class add karein
+      diceDiv.classList.add('rolling');
+
+      // Animation ke doran dice ke chehre tezi se change karein
+      let speed = setInterval(() => {
+        let randomFace = faces[Math.floor(Math.random() * 6)];
+        diceDiv.innerHTML = randomFace;
+      }, 100); // har 0.1 second mein change hoga
+
+      // 1 second (1000ms) baad animation ruk jaye
+      setTimeout(() => {
+        clearInterval(speed); // Chehre change karna band karein
+        diceDiv.classList.remove('rolling'); // Animation class hata dein
+        
+        // Final result show karein
+        let finalFace = faces[Math.floor(Math.random() * 6)];
+        diceDiv.innerHTML = finalFace;
+
+        // Button ko wapas chalu karein
+        rollBtn.disabled = false;
+      }, 1000); // Animation 1 second chalegi
     }
   </script>
 </body>
