@@ -2,62 +2,79 @@
 
 body {
   font-family: 'Segoe UI', system-ui, sans-serif;
-  /* Aasmaani aur jamuni (purple) rang ka gradient background */
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+  /* Gehra (Dark) background */
+  background: #050511;
   color: #e2e8f0;
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
 }
 
-/* Background mein tairte emojis ka style */
-.bg-animation {
+/* --- COOL BACKGROUND ANIMATION --- */
+/* Ye 2 chamakte hue rangeen golay (orbs) hain jo background mein aahista aahista ghomte hain */
+body::before, body::after {
+  content: '';
   position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
+  border-radius: 50%;
+  filter: blur(100px); /* Inko dhundla (blur) karne ke liye */
   z-index: -1;
-  overflow: hidden;
-}
-.bg-animation span {
-  position: absolute;
-  display: block;
-  font-size: 2.5rem;
-  opacity: 0.15; /* Halka sa nazar aayein */
-  animation: floatUp 15s linear infinite;
-}
-/* Har emoji ki alag position aur speed */
-.bg-animation span:nth-child(1) { left: 10%; animation-duration: 12s; bottom: -10%; }
-.bg-animation span:nth-child(2) { left: 30%; animation-duration: 18s; bottom: -10%; font-size: 3rem; }
-.bg-animation span:nth-child(3) { left: 50%; animation-duration: 15s; bottom: -10%; }
-.bg-animation span:nth-child(4) { left: 70%; animation-duration: 20s; bottom: -10%; font-size: 4rem; }
-.bg-animation span:nth-child(5) { left: 85%; animation-duration: 14s; bottom: -10%; }
-.bg-animation span:nth-child(6) { left: 20%; animation-duration: 22s; bottom: -10%; font-size: 2rem;}
-.bg-animation span:nth-child(7) { left: 60%; animation-duration: 16s; bottom: -10%; }
-.bg-animation span:nth-child(8) { left: 40%; animation-duration: 19s; bottom: -10%; }
-
-@keyframes floatUp {
-  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-  10% { opacity: 0.2; }
-  90% { opacity: 0.2; }
-  100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+  opacity: 0.6;
 }
 
-/* Header Style */
+/* Pehla golaya (Neela/Purple) */
+body::before {
+  width: 400px;
+  height: 400px;
+  background: #4f46e5;
+  top: -10%;
+  left: -10%;
+  animation: floatOrb1 12s infinite alternate;
+}
+
+/* Dusra golaya (Pink) */
+body::after {
+  width: 500px;
+  height: 500px;
+  background: #db2777;
+  bottom: -10%;
+  right: -10%;
+  animation: floatOrb2 15s infinite alternate;
+}
+
+@keyframes floatOrb1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(150px, 100px) scale(1.2); }
+}
+
+@keyframes floatOrb2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-150px, -100px) scale(1.1); }
+}
+
+/* --- HEADER --- */
 header {
   text-align: center;
   padding: 60px 20px 30px;
+  position: relative;
+  z-index: 1;
 }
 header h1 {
-  font-size: 3rem;
+  font-size: 3.5rem;
   margin-bottom: 10px;
-  /* Text par roshni (glow) ka effect */
-  text-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
-  background: linear-gradient(to right, #818cf8, #c084fc);
+  font-weight: 800;
+  /* Title par shandar gradient aur glow */
+  background: linear-gradient(to right, #818cf8, #e879f9);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(129, 140, 248, 0.3);
 }
-header p { color: #94a3b8; font-size: 1.2rem; }
+header p { 
+  color: #94a3b8; 
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+}
 
-/* Grid Container */
+/* --- GRID & CARDS --- */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -69,30 +86,31 @@ header p { color: #94a3b8; font-size: 1.2rem; }
   z-index: 1;
 }
 
-/* Card Design (Glassmorphism) */
+/* Glassmorphism (Shishe jaisa) Card */
 .card {
-  background: rgba(30, 41, 59, 0.7); /* Thora sa transparent */
-  backdrop-filter: blur(10px); /* Peeche ka background dhundla karega */
+  background: rgba(255, 255, 255, 0.05); /* Bohat halka safed rang */
+  backdrop-filter: blur(15px); /* Peeche ka background dhundla */
+  -webkit-backdrop-filter: blur(15px);
   border-radius: 20px;
   padding: 30px 20px;
   text-align: center;
   text-decoration: none;
   color: inherit;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
   overflow: hidden;
 }
 
 /* Card par mouse le jaane par kya ho */
 .card:hover {
-  transform: translateY(-10px) scale(1.02);
-  border-color: #818cf8;
-  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
-  background: rgba(30, 41, 59, 0.9);
+  transform: translateY(-10px);
+  border-color: rgba(232, 121, 249, 0.5); /* Pink border */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(232, 121, 249, 0.2);
+  background: rgba(255, 255, 255, 0.1);
 }
 
-/* Card ke andar ka emoji */
+/* Emoji Icon */
 .card .icon { 
   font-size: 3rem; 
   display: block; 
@@ -100,11 +118,19 @@ header p { color: #94a3b8; font-size: 1.2rem; }
   transition: transform 0.3s;
 }
 .card:hover .icon {
-  transform: scale(1.2) rotate(10deg); /* Emoji thora sa bounce karega */
+  transform: scale(1.2) rotate(10deg);
 }
 
-.card h2 { font-size: 1.2rem; margin-bottom: 8px; color: #f8fafc; }
-.card p { font-size: 0.9rem; color: #94a3b8; }
+.card h2 { 
+  font-size: 1.2rem; 
+  margin-bottom: 8px; 
+  color: #f8fafc; 
+  font-weight: 600;
+}
+.card p { 
+  font-size: 0.9rem; 
+  color: #94a3b8; 
+}
 
 /* Footer */
 footer { 
@@ -113,4 +139,6 @@ footer {
   color: #64748b; 
   font-size: 0.9rem; 
   margin-top: 40px;
+  position: relative;
+  z-index: 1;
 }
