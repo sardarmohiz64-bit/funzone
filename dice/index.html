@@ -7,58 +7,39 @@
   <style>
     body { 
       font-family: system-ui, sans-serif; 
-      background: #0f172a; 
       color: #e2e8f0; 
       text-align: center; 
-      padding-top: 50px; 
+      padding-top: 40px; 
       min-height: 100vh; 
       margin: 0; 
       overflow-x: hidden;
+      /* NAYA THEME: Grid Background */
+      background-color: #0d1117;
+      background-image: linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px);
+      background-size: 40px 40px;
+      background-position: center center;
+      background-attachment: fixed;
     }
-    a { 
-      color: #6366f1; 
-      text-decoration: none; 
-      font-size: 1.2rem; 
-      display: inline-block; 
-      margin-bottom: 30px; 
+    /* NAYA THEME: Glow Effect */
+    body::before {
+      content: ''; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 100vw; height: 100vh; background: radial-gradient(circle at center, rgba(99, 102, 241, 0.15) 0%, transparent 60%);
+      z-index: -1; pointer-events: none;
     }
-    a:hover { text-decoration: underline; }
-
-    /* Asli Dice Ka Container */
+    a { color: #818cf8; text-decoration: none; font-size: 1.2rem; display: inline-block; margin-bottom: 30px; font-weight: bold; }
+    a:hover { text-decoration: underline; text-shadow: 0 0 10px rgba(129, 140, 248, 0.5); }
+    
+    h1 { font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(to right, #818cf8, #e879f9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    
     .dice-container {
-      width: 120px;
-      height: 120px;
-      background: #ffffff;
-      border-radius: 16px;
-      margin: 40px auto;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(3, 1fr);
-      padding: 12px;
-      box-sizing: border-box;
-      /* 3D Shadow aur depth ke liye */
-      box-shadow: 
-        inset -3px -3px 8px rgba(0,0,0,0.2),
-        inset 3px 3px 8px rgba(255,255,255,1),
-        0 10px 20px rgba(0,0,0,0.5);
-      position: relative;
-      transition: transform 0.1s;
+      width: 120px; height: 120px; background: #ffffff; border-radius: 16px; margin: 40px auto;
+      display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
+      padding: 12px; box-sizing: border-box;
+      box-shadow: inset -3px -3px 8px rgba(0,0,0,0.2), inset 3px 3px 8px rgba(255,255,255,1), 0 10px 20px rgba(0,0,0,0.5);
+      position: relative; transition: transform 0.1s;
     }
-
-    /* Dice ke Dots (Pips) */
-    .dot {
-      width: 20px;
-      height: 20px;
-      background: #111827;
-      border-radius: 50%;
-      place-self: center;
-      box-shadow: inset 2px 2px 4px rgba(0,0,0,0.8), 1px 1px 2px rgba(255,255,255,0.5);
-      opacity: 0;
-      transition: opacity 0.1s;
-    }
+    .dot { width: 20px; height: 20px; background: #111827; border-radius: 50%; place-self: center; box-shadow: inset 2px 2px 4px rgba(0,0,0,0.8), 1px 1px 2px rgba(255,255,255,0.5); opacity: 0; transition: opacity 0.1s; }
     .dot.active { opacity: 1; }
-
-    /* Asli Dice ki tarah uchhalne (Tumble) ki animation */
     @keyframes tumble {
       0% { transform: rotate(0deg) translateY(0) scale(1); }
       25% { transform: rotate(90deg) translateY(-30px) scale(1.1); }
@@ -66,100 +47,47 @@
       75% { transform: rotate(270deg) translateY(-15px) scale(1.05); }
       100% { transform: rotate(360deg) translateY(0) scale(1); }
     }
-    
     .rolling { animation: tumble 1s ease-in-out; }
-
+    
     button { 
-      background: #6366f1; 
-      color: white; 
-      border: none; 
-      padding: 15px 40px; 
-      font-size: 1.2rem; 
-      border-radius: 10px; 
-      cursor: pointer; 
-      margin-top: 20px; 
-      transition: 0.2s; 
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      background: rgba(99, 102, 241, 0.8); backdrop-filter: blur(10px); color: white; border: 1px solid rgba(255,255,255,0.2); 
+      padding: 15px 40px; font-size: 1.2rem; border-radius: 10px; cursor: pointer; margin-top: 20px; transition: 0.3s; 
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
     }
-    button:hover { background: #4f46e5; transform: translateY(-2px); }
-    button:active { transform: translateY(0); }
-    button:disabled { background: #475569; cursor: not-allowed; opacity: 0.7; transform: none; }
+    button:hover { background: rgba(99, 102, 241, 1); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6); }
+    button:disabled { background: #475569; cursor: not-allowed; opacity: 0.7; transform: none; box-shadow: none; }
   </style>
 </head>
 <body>
   <a href="../index.html">⬅️ Wapas Home</a>
-  
   <h1>🎲 Dice Roller</h1>
   <p>Button dabayein aur asli dice roll karein!</p>
 
-  <!-- Ye hai 3x3 ka grid jahan dots aayenge -->
   <div class="dice-container" id="dice">
-    <div class="dot" id="d1"></div>
-    <div class="dot" id="d2"></div>
-    <div class="dot" id="d3"></div>
-    <div class="dot" id="d4"></div>
-    <div class="dot" id="d5"></div>
-    <div class="dot" id="d6"></div>
-    <div class="dot" id="d7"></div>
-    <div class="dot" id="d8"></div>
-    <div class="dot" id="d9"></div>
+    <div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div>
+    <div class="dot" id="d4"></div><div class="dot" id="d5"></div><div class="dot" id="d6"></div>
+    <div class="dot" id="d7"></div><div class="dot" id="d8"></div><div class="dot" id="d9"></div>
   </div>
   
   <button id="rollBtn" onclick="rollDice()">Roll Dice</button>
 
   <script>
-    // Har number ke hisaab se dots (1 se 9 grid positions)
-    const diceFaces = {
-      1: [5],                   // Center
-      2: [1, 9],                // Top-Left, Bottom-Right
-      3: [1, 5, 9],             // Diagonal
-      4: [1, 3, 7, 9],          // Four Corners
-      5: [1, 3, 5, 7, 9],       // Four Corners + Center
-      6: [1, 3, 4, 6, 7, 9]     // Two columns of three
-    };
-
+    const diceFaces = { 1: [5], 2: [1, 9], 3: [1, 5, 9], 4: [1, 3, 7, 9], 5: [1, 3, 5, 7, 9], 6: [1, 3, 4, 6, 7, 9] };
     function showDice(num) {
-      // Pehle saare dots ko hide karein
-      for (let i = 1; i <= 9; i++) {
-        document.getElementById('d' + i).classList.remove('active');
-      }
-      // Phir naye number ke dots show karein
-      diceFaces[num].forEach(position => {
-        document.getElementById('d' + position).classList.add('active');
-      });
+      for (let i = 1; i <= 9; i++) document.getElementById('d' + i).classList.remove('active');
+      diceFaces[num].forEach(position => document.getElementById('d' + position).classList.add('active'));
     }
-
     function rollDice() {
       const diceDiv = document.getElementById('dice');
       const rollBtn = document.getElementById('rollBtn');
-
-      // Button disable karein taake double click na ho
       rollBtn.disabled = true;
-
-      // Animation class add karein
       diceDiv.classList.add('rolling');
-
-      // Animation ke doran tezi se dots change karein
-      let speed = setInterval(() => {
-        let randomFace = Math.floor(Math.random() * 6) + 1;
-        showDice(randomFace);
-      }, 80); // Har 0.08 second mein change hoga
-
-      // 1 second baad animation rok dein
+      let speed = setInterval(() => { showDice(Math.floor(Math.random() * 6) + 1); }, 80);
       setTimeout(() => {
-        clearInterval(speed); 
-        diceDiv.classList.remove('rolling');
-        
-        // Final result generate karein aur dikhayein
-        let finalFace = Math.floor(Math.random() * 6) + 1;
-        showDice(finalFace);
-
-        // Button wapas chalu karein
-        rollBtn.disabled = false;
+        clearInterval(speed); diceDiv.classList.remove('rolling');
+        showDice(Math.floor(Math.random() * 6) + 1); rollBtn.disabled = false;
       }, 1000); 
     }
-
-    // Page load hote hi 1 ka dice dikhayein
     window.onload = () => showDice(1);
   </script>
 </body>
