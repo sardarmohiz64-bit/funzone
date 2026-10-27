@@ -4,46 +4,71 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>FunZone — Timepass Hub</title>
+  <!-- Tab ka icon (Favicon) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Theme Toggle Button (Top Right) -->
+  <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" title="Theme Change Karein">☀️ Light Mode</button>
+
   <header>
     <h1>🎉 FunZone</h1>
     <p>Aap ka daily timepass hub!</p>
   </header>
 
   <main class="grid">
-    <!-- Dice Roller -->
-    <a href="dice/index.html" class="card">
-      <span class="icon">🎲</span>
-      <h2>Dice Roller</h2>
-      <p>Asli dice fenkein</p>
-    </a>
+    <!-- Games -->
+    <a href="dice/index.html" class="card"><span class="icon">🎲</span><h2>Dice Roller</h2><p>Asli dice fenkein</p></a>
+    <a href="coin/index.html" class="card"><span class="icon">🪙</span><h2>Coin Flip</h2><p>Heads ya Tails</p></a>
+    <a href="wheel/index.html" class="card"><span class="icon">🎡</span><h2>Name Wheel</h2><p>Random picker</p></a>
+    <a href="wyr/index.html" class="card"><span class="icon">❓</span><h2>Would You Rather</h2><p>Mazedaar sawalat</p></a>
     
-    <!-- Coin Flip -->
-    <a href="coin/index.html" class="card">
-      <span class="icon">🪙</span>
-      <h2>Coin Flip</h2>
-      <p>Heads ya Tails</p>
-    </a>
-    
-    <!-- Name Wheel -->
-    <a href="wheel/index.html" class="card">
-      <span class="icon">🎡</span>
-      <h2>Name Wheel</h2>
-      <p>Random name picker</p>
-    </a>
-    
-    <!-- Would You Rather -->
-    <a href="wyr/index.html" class="card">
-      <span class="icon">❓</span>
-      <h2>Would You Rather</h2>
-      <p>Mazedaar sawalat</p>
-    </a>
+    <!-- Naye Games -->
+    <a href="rps/index.html" class="card"><span class="icon">✊</span><h2>Rock Paper Scissors</h2><p>Computer se larain</p></a>
+    <a href="password/index.html" class="card"><span class="icon">🔐</span><h2>Password Maker</h2><p>Strong password banayein</p></a>
   </main>
 
   <footer>
-    <p>Made with ❤️ | FunZone</p>
+    <p>Made with ❤️ by <b>Sardar Mohiz</b> | FunZone</p>
   </footer>
+
+  <!-- Back to Top Button -->
+  <button id="topBtn" class="top-btn" onclick="scrollToTop()">⬆️</button>
+
+  <script>
+    // Theme Toggle Logic
+    function toggleTheme() {
+      document.body.classList.toggle('light-mode');
+      const btn = document.getElementById('themeToggle');
+      if(document.body.classList.contains('light-mode')) {
+        btn.innerHTML = "🌙 Dark Mode";
+        localStorage.setItem('theme', 'light');
+      } else {
+        btn.innerHTML = "☀️ Light Mode";
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    // Jab page load ho to theme check karein
+    if(localStorage.getItem('theme') === 'light') {
+      document.body.classList.add('light-mode');
+      document.getElementById('themeToggle').innerHTML = "🌙 Dark Mode";
+    }
+
+    // Back to Top Logic
+    window.onscroll = function() {
+      const topBtn = document.getElementById('topBtn');
+      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+        topBtn.style.display = "block";
+      } else {
+        topBtn.style.display = "none";
+      }
+    };
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
 </body>
 </html>
